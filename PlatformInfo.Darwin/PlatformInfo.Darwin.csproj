@@ -5,4 +5,11 @@
     <CodeAnalysisRuleSet>..\Analyzers.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <PackageId>PlatformInfo.Darwin</PackageId>
+    <Title>PlatformInfo.Darwin</Title>
+    <Description>PlatformInfo.Darwin.</Description>
+    <PackageTags>mac</PackageTags>
+  </PropertyGroup>
+
 </Project>

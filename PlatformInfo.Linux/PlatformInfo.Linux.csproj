@@ -5,4 +5,11 @@
     <CodeAnalysisRuleSet>..\Analyzers.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <PackageId>PlatformInfo.Linux</PackageId>
+    <Title>PlatformInfo.Linux</Title>
+    <Description>PlatformInfo.Linux.</Description>
+    <PackageTags>linux</PackageTags>
+  </PropertyGroup>
+
 </Project>
