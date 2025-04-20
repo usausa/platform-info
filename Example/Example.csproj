@@ -6,4 +6,9 @@
     <CodeAnalysisRuleSet>..\Analyzers.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PlatformInfo.Darwin\PlatformInfo.Darwin.csproj" />
+    <ProjectReference Include="..\PlatformInfo.Linux\PlatformInfo.Linux.csproj" />
+  </ItemGroup>
+
 </Project>
