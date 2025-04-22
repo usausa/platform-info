@@ -6,7 +6,7 @@ using System.Runtime.Versioning;
 using static PlatformInfo.Darwin.NativeMethods;
 
 [SupportedOSPlatform("maccatalyst")]
-public static class Platform
+public static class DarwinPlatform
 {
     public static TimeSpan GetUptime()
     {
