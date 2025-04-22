@@ -7,8 +7,9 @@ internal static class ExampleLinux
 {
     public static void LinuxMain()
     {
-        //Console.WriteLine(LinuxPlatform.GetUptime());
+        var uptime = LinuxPlatform.GetUptimeInfo();
+        Console.WriteLine(uptime.Uptime);
         //Console.WriteLine(LinuxPlatform.MemoryTest());
-        LinuxPlatform.CpuTest();
+        //LinuxPlatform.CpuTest();
     }
 }

@@ -7,6 +7,7 @@ internal static class ExampleDarwin
 {
     public static void DarwinMain()
     {
-        Console.WriteLine(DarwinPlatform.GetUptime());
+        var uptime = DarwinPlatform.GetUptimeInfo();
+        Console.WriteLine(uptime.Uptime);
     }
 }
