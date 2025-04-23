@@ -17,25 +17,29 @@ internal static class ExampleLinux
         var drives = DriveInfo.GetDrives();
         foreach (var drive in drives)
         {
-            if (drive.IsReady && drive.DriveType == DriveType.Fixed)
+            if (drive.IsReady && IsTargetDriveType(drive.DriveType))
             {
-                var driveName = drive.Name;
                 var totalSize = drive.TotalSize;
                 var freeSpace = drive.TotalFreeSpace;
                 var usedSpace = totalSize - freeSpace;
 
-                // 使用率を計算
                 var usagePercentage = ((double)usedSpace / totalSize) * 100;
 
-                // 結果を表示
-                Console.WriteLine($"Drive: {driveName}");
-                //Console.WriteLine($"  Total Size: {FormatBytes(totalSize)}");
-                //Console.WriteLine($"  Used Space: {FormatBytes(usedSpace)}");
-                //Console.WriteLine($"  Free Space: {FormatBytes(freeSpace)}");
+                Console.WriteLine($"Drive: {drive.Name} {drive.VolumeLabel}");
+                Console.WriteLine($"  Type: {drive.DriveType}");
+                Console.WriteLine($"  Format: {drive.DriveFormat}");
+                Console.WriteLine($"  Total Size: {FormatBytes(totalSize)}");
+                Console.WriteLine($"  Used Space: {FormatBytes(usedSpace)}");
                 Console.WriteLine($"  Usage: {usagePercentage:F2}%");
             }
         }
     }
+
+    private static bool IsTargetDriveType(DriveType type) =>
+        type != DriveType.Removable &&
+        type != DriveType.Network &&
+        type != DriveType.CDRom &&
+        type != DriveType.Ram;
 
     private static string FormatBytes(long bytes)
     {
