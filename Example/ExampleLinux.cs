@@ -17,7 +17,7 @@ internal static class ExampleLinux
         var drives = DriveInfo.GetDrives();
         foreach (var drive in drives)
         {
-            if (drive.IsReady)
+            if (drive.IsReady && drive.DriveType == DriveType.Fixed)
             {
                 var driveName = drive.Name;
                 var totalSize = drive.TotalSize;
@@ -29,9 +29,9 @@ internal static class ExampleLinux
 
                 // 結果を表示
                 Console.WriteLine($"Drive: {driveName}");
-                Console.WriteLine($"  Total Size: {FormatBytes(totalSize)}");
-                Console.WriteLine($"  Used Space: {FormatBytes(usedSpace)}");
-                Console.WriteLine($"  Free Space: {FormatBytes(freeSpace)}");
+                //Console.WriteLine($"  Total Size: {FormatBytes(totalSize)}");
+                //Console.WriteLine($"  Used Space: {FormatBytes(usedSpace)}");
+                //Console.WriteLine($"  Free Space: {FormatBytes(freeSpace)}");
                 Console.WriteLine($"  Usage: {usagePercentage:F2}%");
             }
         }
