@@ -2,7 +2,9 @@ namespace PlatformInfo.Linux;
 
 using System.Globalization;
 
-public sealed class UptimeInfo
+using PlatformInfo.Abstraction;
+
+public sealed class UptimeInfo : IPlatformInfo
 {
     public DateTime UpdateAt { get; private set; }
 

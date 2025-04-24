@@ -3,6 +3,7 @@
     <Project Path="Example/Example.csproj" />
   </Folder>
   <Folder Name="/Library/">
+    <Project Path="PlatformInfo.Abstraction/PlatformInfo.Abstraction.csproj" />
     <Project Path="PlatformInfo.Darwin/PlatformInfo.Darwin.csproj" />
     <Project Path="PlatformInfo.Linux/PlatformInfo.Linux.csproj" />
   </Folder>

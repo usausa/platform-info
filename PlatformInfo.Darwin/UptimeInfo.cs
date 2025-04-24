@@ -1,11 +1,12 @@
 namespace PlatformInfo.Darwin;
 
-using System.Globalization;
 using System.Runtime.InteropServices;
+
+using PlatformInfo.Abstraction;
 
 using static PlatformInfo.Darwin.NativeMethods;
 
-public sealed class UptimeInfo
+public sealed class UptimeInfo : IPlatformInfo
 {
     public DateTime UpdateAt { get; private set; }
 

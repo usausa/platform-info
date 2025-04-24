@@ -13,4 +13,8 @@
     <PackageTags>mac</PackageTags>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PlatformInfo.Abstraction\PlatformInfo.Abstraction.csproj" />
+  </ItemGroup>
+
 </Project>

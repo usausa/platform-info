@@ -2,7 +2,9 @@ namespace PlatformInfo.Linux;
 
 using System;
 
-public sealed class MemoryInfo
+using PlatformInfo.Abstraction;
+
+public sealed class MemoryInfo : IPlatformInfo
 {
     public DateTime UpdateAt { get; private set; }
 
