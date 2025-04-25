@@ -1,5 +1,8 @@
 namespace Example;
 
+using System.Globalization;
+using System.Text;
+
 using PlatformInfo.Linux;
 
 #pragma warning disable CA1416
@@ -18,6 +21,22 @@ internal static class ExampleLinux
         Console.WriteLine(stat.ProcessRunning);
         Console.WriteLine(stat.ProcessBlocked);
         Console.WriteLine(stat.ContextSwitchPerSecond);
+
+        Console.WriteLine("Total    Cpu1   Cpu2   Cpu3   Cpu4");
+        for (var i = 0; i < 100; i++)
+        {
+            Thread.Sleep(1000);
+            stat.Update();
+
+            var sb = new StringBuilder();
+            sb.Append(stat.CpuTotal.Usage.ToString("F2", CultureInfo.InvariantCulture).PadLeft(7));
+            foreach (var cpu in stat.Cpu)
+            {
+                sb.Append(cpu.Usage.ToString("F2", CultureInfo.InvariantCulture).PadLeft(7));
+            }
+
+            Console.WriteLine(sb);
+        }
 
         var memory = LinuxPlatform.GetMemoryInfo();
         Console.WriteLine(memory.MemoryUsage);
