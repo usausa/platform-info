@@ -10,6 +10,15 @@ internal static class ExampleLinux
         var uptime = LinuxPlatform.GetUptimeInfo();
         Console.WriteLine(uptime.Uptime);
 
+        var stat = LinuxPlatform.GetStatInfo();
+        Thread.Sleep(1000);
+        stat.Update();
+
+        Console.WriteLine(stat.CpuTotal.Usage);
+        Console.WriteLine(stat.ProcessRunning);
+        Console.WriteLine(stat.ProcessBlocked);
+        Console.WriteLine(stat.ContextSwitchPerSecond);
+
         var memory = LinuxPlatform.GetMemoryInfo();
         Console.WriteLine(memory.MemoryUsage);
         //LinuxPlatform.CpuTest();

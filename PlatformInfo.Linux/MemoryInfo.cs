@@ -31,55 +31,36 @@ public sealed class MemoryInfo : IPlatformInfo
             return true;
         }
 
-        var count = 0;
-        var memoryTotal = 0L;
-        var memoryFree = 0L;
-        var buffers = 0L;
-        var cached = 0L;
-
         using var reader = new StreamReader("/proc/meminfo");
         while (reader.ReadLine() is { } line)
         {
-            if (line.StartsWith("MemTotal", StringComparison.Ordinal))
+            var span = line.AsSpan();
+            if (span.StartsWith("MemTotal"))
             {
-                memoryTotal = ExtractValue(line.AsSpan());
-                count++;
+                MemoryTotal = ExtractValue(span);
             }
-            else if (line.StartsWith("MemFree", StringComparison.Ordinal))
+            else if (span.StartsWith("MemFree"))
             {
-                memoryFree = ExtractValue(line.AsSpan());
-                count++;
+                MemFree = ExtractValue(span);
             }
-            else if (line.StartsWith("Buffers", StringComparison.Ordinal))
+            else if (span.StartsWith("Buffers"))
             {
-                buffers = ExtractValue(line.AsSpan());
-                count++;
+                Buffers = ExtractValue(span);
             }
-            else if (line.StartsWith("Cached", StringComparison.Ordinal))
+            else if (span.StartsWith("Cached"))
             {
-                cached = ExtractValue(line.AsSpan());
-                count++;
+                Cached = ExtractValue(span);
             }
         }
-
-        if (count < 4)
-        {
-            return false;
-        }
-
-        MemoryTotal = memoryTotal;
-        MemFree = memoryFree;
-        Buffers = buffers;
-        Cached = cached;
 
         UpdateAt = now;
 
         return true;
+    }
 
-        long ExtractValue(ReadOnlySpan<char> span)
-        {
-            var range = (Span<Range>)stackalloc Range[3];
-            return (span.Split(range, ' ', StringSplitOptions.RemoveEmptyEntries) > 1) && Int64.TryParse(span[range[1]], out var result) ? result : 0;
-        }
+    private static long ExtractValue(ReadOnlySpan<char> span)
+    {
+        var range = (Span<Range>)stackalloc Range[3];
+        return (span.Split(range, ' ', StringSplitOptions.RemoveEmptyEntries) > 1) && Int64.TryParse(span[range[1]], out var result) ? result : 0;
     }
 }
