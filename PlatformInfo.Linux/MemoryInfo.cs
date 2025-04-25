@@ -37,19 +37,19 @@ public sealed class MemoryInfo : IPlatformInfo
             var span = line.AsSpan();
             if (span.StartsWith("MemTotal"))
             {
-                MemoryTotal = ExtractValue(span);
+                MemoryTotal = ExtractInt64(span);
             }
             else if (span.StartsWith("MemFree"))
             {
-                MemFree = ExtractValue(span);
+                MemFree = ExtractInt64(span);
             }
             else if (span.StartsWith("Buffers"))
             {
-                Buffers = ExtractValue(span);
+                Buffers = ExtractInt64(span);
             }
             else if (span.StartsWith("Cached"))
             {
-                Cached = ExtractValue(span);
+                Cached = ExtractInt64(span);
             }
         }
 
@@ -58,7 +58,7 @@ public sealed class MemoryInfo : IPlatformInfo
         return true;
     }
 
-    private static long ExtractValue(ReadOnlySpan<char> span)
+    private static long ExtractInt64(ReadOnlySpan<char> span)
     {
         var range = (Span<Range>)stackalloc Range[3];
         return (span.Split(range, ' ', StringSplitOptions.RemoveEmptyEntries) > 1) && Int64.TryParse(span[range[1]], out var result) ? result : 0;

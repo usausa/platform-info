@@ -75,9 +75,9 @@ public sealed class StatInfo : IPlatformInfo
 
     public double ContextSwitchPerSecond => (ContextSwitchTotal - previousContextSwitch) / (UpdateAt - previousUpdateAt).TotalSeconds;
 
-    public long ProcessRunning { get; private set; }
+    public int ProcessRunning { get; private set; }
 
-    public long ProcessBlocked { get; private set; }
+    public int ProcessBlocked { get; private set; }
 
     public StatInfo()
     {
@@ -113,15 +113,15 @@ public sealed class StatInfo : IPlatformInfo
             else if (span.StartsWith("ctxt"))
             {
                 previousContextSwitch = ContextSwitchTotal;
-                ContextSwitchTotal = ExtractValue(span);
+                ContextSwitchTotal = ExtractInt64(span);
             }
             else if (span.StartsWith("procs_running"))
             {
-                ProcessRunning = ExtractValue(span);
+                ProcessRunning = ExtractInt32(span);
             }
             else if (span.StartsWith("procs_blocked"))
             {
-                ProcessBlocked = ExtractValue(span);
+                ProcessBlocked = ExtractInt32(span);
             }
         }
 
@@ -172,9 +172,15 @@ public sealed class StatInfo : IPlatformInfo
         return cpu[index];
     }
 
-    private static long ExtractValue(ReadOnlySpan<char> span)
+    private static long ExtractInt64(ReadOnlySpan<char> span)
     {
         var range = (Span<Range>)stackalloc Range[2];
         return (span.Split(range, ' ', StringSplitOptions.RemoveEmptyEntries) > 1) && Int64.TryParse(span[range[1]], out var result) ? result : 0;
+    }
+
+    private static int ExtractInt32(ReadOnlySpan<char> span)
+    {
+        var range = (Span<Range>)stackalloc Range[2];
+        return (span.Split(range, ' ', StringSplitOptions.RemoveEmptyEntries) > 1) && Int32.TryParse(span[range[1]], out var result) ? result : 0;
     }
 }
