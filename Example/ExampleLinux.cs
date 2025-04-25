@@ -13,6 +13,8 @@ internal static class ExampleLinux
         var uptime = LinuxPlatform.GetUptimeInfo();
         Console.WriteLine(uptime.Uptime);
 
+        var load = LinuxPlatform.GetLoadAverageInfo();
+
         var stat = LinuxPlatform.GetStatInfo();
         Thread.Sleep(1000);
         stat.Update();
@@ -27,6 +29,7 @@ internal static class ExampleLinux
         {
             Thread.Sleep(1000);
             stat.Update();
+            load.Update();
 
             var sb = new StringBuilder();
             sb.Append(stat.CpuTotal.Usage.ToString("F2", CultureInfo.InvariantCulture).PadLeft(7));
@@ -36,6 +39,7 @@ internal static class ExampleLinux
             }
 
             Console.WriteLine(sb);
+            Console.WriteLine($"{load.Average1:F2} {load.Average5:F2} {load.Average15:F2}");
         }
 
         var memory = LinuxPlatform.GetMemoryInfo();

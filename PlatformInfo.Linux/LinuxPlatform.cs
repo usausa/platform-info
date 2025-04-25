@@ -10,5 +10,7 @@ public static class LinuxPlatform
 
     public static StatInfo GetStatInfo() => new();
 
+    public static LoadAverageInfo GetLoadAverageInfo() => new();
+
     public static MemoryInfo GetMemoryInfo() => new();
 }

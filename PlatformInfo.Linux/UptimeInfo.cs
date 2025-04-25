@@ -1,5 +1,6 @@
 namespace PlatformInfo.Linux;
 
+using System;
 using System.Globalization;
 
 using PlatformInfo.Abstraction;
@@ -23,8 +24,10 @@ public sealed class UptimeInfo : IPlatformInfo
             return true;
         }
 
-        var str = File.ReadAllText("/proc/uptime");
-        var second = Double.Parse(str.Split(' ')[0], CultureInfo.InvariantCulture);
+        var span = File.ReadAllText("/proc/uptime").AsSpan();
+        var range = (Span<Range>)stackalloc Range[2];
+        span.Split(range, ' ', StringSplitOptions.RemoveEmptyEntries);
+        var second = Double.Parse(span[range[0]], CultureInfo.InvariantCulture);
         Uptime = TimeSpan.FromSeconds(second);
 
         UpdateAt = now;
