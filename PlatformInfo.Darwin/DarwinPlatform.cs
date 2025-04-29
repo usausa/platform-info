@@ -6,5 +6,5 @@ using System.Runtime.Versioning;
 [SupportedOSPlatform("maccatalyst")]
 public static class DarwinPlatform
 {
-    public static UptimeInfo GetUptimeInfo() => new();
+    public static UptimeInfo GetUptime() => new();
 }

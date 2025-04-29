@@ -6,11 +6,13 @@ using System.Runtime.Versioning;
 [SupportedOSPlatform("linux")]
 public static class LinuxPlatform
 {
-    public static UptimeInfo GetUptimeInfo() => new();
+    public static UptimeInfo GetUptime() => new();
 
-    public static StatInfo GetStatInfo() => new();
+    public static StatInfo GetStat() => new();
 
-    public static LoadAverageInfo GetLoadAverageInfo() => new();
+    public static LoadAverageInfo GetLoadAverage() => new();
 
-    public static MemoryInfo GetMemoryInfo() => new();
+    public static MemoryInfo GetMemory() => new();
+
+    public static FileDescriptorInfo GetFileDescriptor() => new();
 }

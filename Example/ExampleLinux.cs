@@ -10,12 +10,15 @@ internal static class ExampleLinux
 {
     public static void LinuxMain()
     {
-        var uptime = LinuxPlatform.GetUptimeInfo();
+        var uptime = LinuxPlatform.GetUptime();
         Console.WriteLine(uptime.Uptime);
 
-        var load = LinuxPlatform.GetLoadAverageInfo();
+        var fd = LinuxPlatform.GetFileDescriptor();
+        Console.WriteLine($"{fd.Allocated} {fd.Used} {fd.Max}");
 
-        var stat = LinuxPlatform.GetStatInfo();
+        var load = LinuxPlatform.GetLoadAverage();
+
+        var stat = LinuxPlatform.GetStat();
         Thread.Sleep(1000);
         stat.Update();
 
@@ -51,7 +54,7 @@ internal static class ExampleLinux
             Console.WriteLine($"{load.Average1:F2} {load.Average5:F2} {load.Average15:F2}");
         }
 
-        var memory = LinuxPlatform.GetMemoryInfo();
+        var memory = LinuxPlatform.GetMemory();
         Console.WriteLine(memory.MemoryUsage);
         //LinuxPlatform.CpuTest();
 
