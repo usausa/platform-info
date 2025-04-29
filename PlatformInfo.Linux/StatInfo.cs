@@ -7,6 +7,8 @@ using PlatformInfo.Abstraction;
 
 public sealed class CpuStat
 {
+    // TODO Full total & diff, shift
+
     public long User { get; internal set; }
 
     public long Nice { get; internal set; }
@@ -57,7 +59,7 @@ public sealed class CpuStat
     }
 }
 
-public sealed class StatInfo : IPlatformInfo
+public sealed class StatInfo : ITimeSpanPlatformInfo
 {
     private readonly List<CpuStat> cpu = new();
 
@@ -67,13 +69,15 @@ public sealed class StatInfo : IPlatformInfo
 
     public DateTime UpdateAt { get; private set; }
 
+    public TimeSpan TimeSpan => UpdateAt - previousUpdateAt;
+
     public CpuStat CpuTotal { get; } = new();
 
     public IReadOnlyList<CpuStat> Cpu => cpu;
 
     public long ContextSwitchTotal { get; private set; }
 
-    public double ContextSwitchPerSecond => (ContextSwitchTotal - previousContextSwitch) / (UpdateAt - previousUpdateAt).TotalSeconds;
+    public double ContextSwitchPerSecond => (ContextSwitchTotal - previousContextSwitch) / TimeSpan.TotalSeconds;
 
     public int ProcessRunning { get; private set; }
 
@@ -147,6 +151,7 @@ public sealed class StatInfo : IPlatformInfo
             stat = FindCpu(index);
         }
 
+        // TODO Shift?
         stat.PreviousActive = stat.Active;
         stat.PreviousTotal = stat.Total;
 
