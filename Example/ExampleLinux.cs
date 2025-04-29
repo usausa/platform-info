@@ -24,6 +24,15 @@ internal static class ExampleLinux
         Console.WriteLine(stat.ProcessBlocked);
         Console.WriteLine(stat.ContextSwitchPerSecond);
 
+        for (var i = 0; i < 10; i++)
+        {
+            Thread.Sleep(1000);
+            stat.Update();
+
+            Console.WriteLine($"{stat.ContextSwitchTotal} {stat.InterruptTotal} {stat.SoftIrqTotal}");
+            Console.WriteLine($"{stat.ContextSwitchPerSecond:F2} {stat.InterruptPerSecond:F2} {stat.SoftIrqPerSecond:F2}");
+        }
+
         Console.WriteLine("Total    Cpu1   Cpu2   Cpu3   Cpu4");
         for (var i = 0; i < 100; i++)
         {
