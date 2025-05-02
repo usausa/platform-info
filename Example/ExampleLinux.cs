@@ -16,6 +16,9 @@ internal static class ExampleLinux
         var fd = LinuxPlatform.GetFileDescriptor();
         Console.WriteLine($"{fd.Allocated} {fd.Used} {fd.Max}");
 
+        var process = LinuxPlatform.GetProcessSummary();
+        Console.WriteLine($"{process.ProcessCount} {process.ThreadCount}");
+
         var load = LinuxPlatform.GetLoadAverage();
 
         var stat = LinuxPlatform.GetStat();
