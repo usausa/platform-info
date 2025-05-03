@@ -7,153 +7,64 @@ using PlatformInfo.Abstraction;
 
 public sealed class CpuStat
 {
-    private long previousUser;
+    public long User { get; internal set; }
 
-    private long previousNice;
+    public long Nice { get; internal set; }
 
-    private long previousSystem;
+    public long System { get; internal set; }
 
-    private long previousIdle;
+    public long Idle { get; internal set; }
 
-    private long previousIoWait;
+    public long IoWait { get; internal set; }
 
-    private long previousIrq;
+    public long Irq { get; internal set; }
 
-    private long previousSoftIrq;
+    public long SoftIrq { get; internal set; }
 
-    private long previousSteal;
+    public long Steal { get; internal set; }
 
-    private long previousGuest;
+    public long Guest { get; internal set; }
 
-    private long previousGuestNice;
+    public long GuestNice { get; internal set; }
 
-    public long UserTotal { get; internal set; }
+    public long Active => User + Nice + System + IoWait + Irq + SoftIrq;
 
-    public long NiceTotal { get; internal set; }
+    public long Total => Active + Idle;
 
-    public long SystemTotal { get; internal set; }
-
-    public long IdleTotal { get; internal set; }
-
-    public long IoWaitTotal { get; internal set; }
-
-    public long IrqTotal { get; internal set; }
-
-    public long SoftIrqTotal { get; internal set; }
-
-    public long StealTotal { get; internal set; }
-
-    public long GuestTotal { get; internal set; }
-
-    public long GuestNiceTotal { get; internal set; }
-
-    public long UserDiff => UserTotal - previousUser;
-
-    public long NiceDiff => NiceTotal - previousNice;
-
-    public long SystemDiff => SystemTotal - previousSystem;
-
-    public long IdleDiff => IdleTotal - previousIdle;
-
-    public long IoWaitDiff => IoWaitTotal - previousIoWait;
-
-    public long IrqDiff => IrqTotal - previousIrq;
-
-    public long SoftIrqDiff => SoftIrqTotal - previousSoftIrq;
-
-    public long StealDiff => StealTotal - previousSteal;
-
-    public long GuestDiff => GuestTotal - previousGuest;
-
-    public long GuestNiceDiff => GuestNiceTotal - previousGuestNice;
-
-    internal long TimeSpanActive => UserDiff + NiceDiff + SystemDiff + IoWaitDiff + IrqDiff + SoftIrqDiff;
-
-    internal long TimeSpanTotal => TimeSpanActive + IdleDiff;
-
-    public double Usage
+    internal CpuStat()
     {
-        get
-        {
-            var total = TimeSpanTotal;
-            var active = TimeSpanActive;
-            return total == 0 ? 0 : (double)active / total * 100;
-        }
-    }
-
-    internal void CopyToPrevious()
-    {
-        previousUser = UserTotal;
-        previousNice = NiceTotal;
-        previousSystem = SystemTotal;
-        previousIdle = IdleTotal;
-        previousIoWait = IoWaitTotal;
-        previousIrq = IrqTotal;
-        previousSoftIrq = SoftIrqTotal;
-        previousSteal = StealTotal;
-        previousGuest = GuestTotal;
-        previousGuestNice = GuestNiceTotal;
     }
 }
 
-public sealed class StatInfo : ITimeSpanPlatformInfo
+public sealed class StatInfo : IPlatformInfo
 {
     private readonly List<CpuStat> cpu = new();
 
-    private DateTime previousUpdateAt;
-
-    private long previousInterrupt;
-
-    private long previousContextSwitch;
-
-    private long previousSoftIrq;
-
     public DateTime UpdateAt { get; private set; }
-
-    public TimeSpan TimeSpan => UpdateAt - previousUpdateAt;
 
     public CpuStat CpuTotal { get; } = new();
 
     public IReadOnlyList<CpuStat> Cpu => cpu;
 
-    public long InterruptTotal { get; private set; }
+    // Total
+    public long Interrupt { get; private set; }
 
-    public long InterruptDiff => InterruptTotal - previousInterrupt;
+    // Total
+    public long ContextSwitch { get; private set; }
 
-    public double InterruptPerSecond => InterruptDiff / TimeSpan.TotalSeconds;
-
-    public long ContextSwitchTotal { get; private set; }
-
-    public long ContextSwitchDiff => ContextSwitchTotal - previousContextSwitch;
-
-    public double ContextSwitchPerSecond => ContextSwitchDiff / TimeSpan.TotalSeconds;
-
-    public long SoftIrqTotal { get; private set; }
-
-    public long SoftIrqDiff => SoftIrqTotal - previousSoftIrq;
-
-    public double SoftIrqPerSecond => SoftIrqDiff / TimeSpan.TotalSeconds;
+    // Total
+    public long SoftIrq { get; private set; }
 
     public int ProcessRunning { get; private set; }
 
     public int ProcessBlocked { get; private set; }
 
-    public StatInfo()
+    internal StatInfo()
     {
         Update();
-
-        CpuTotal.CopyToPrevious();
-        foreach (var stat in cpu)
-        {
-            stat.CopyToPrevious();
-        }
-
-        previousInterrupt = InterruptTotal;
-        previousContextSwitch = ContextSwitchTotal;
-        previousSoftIrq = SoftIrqTotal;
-        previousUpdateAt = UpdateAt;
     }
 
+    // ReSharper disable StringLiteralTypo
     public bool Update()
     {
         var now = DateTime.Now;
@@ -173,13 +84,11 @@ public sealed class StatInfo : ITimeSpanPlatformInfo
             }
             else if (span.StartsWith("intr"))
             {
-                previousInterrupt = InterruptTotal;
-                InterruptTotal = ExtractInt64(span, 3);
+                Interrupt = ExtractInt64(span, 3);
             }
             else if (span.StartsWith("ctxt"))
             {
-                previousContextSwitch = ContextSwitchTotal;
-                ContextSwitchTotal = ExtractInt64(span);
+                ContextSwitch = ExtractInt64(span);
             }
             else if (span.StartsWith("procs_running"))
             {
@@ -191,16 +100,15 @@ public sealed class StatInfo : ITimeSpanPlatformInfo
             }
             else if (span.StartsWith("softirq"))
             {
-                previousSoftIrq = SoftIrqTotal;
-                SoftIrqTotal = ExtractInt64(span, 12);
+                SoftIrq = ExtractInt64(span, 12);
             }
         }
 
-        previousUpdateAt = UpdateAt;
         UpdateAt = now;
 
         return true;
     }
+    // ReSharper restore StringLiteralTypo
 
     private void UpdateCpuValue(ReadOnlySpan<char> span)
     {
@@ -218,17 +126,16 @@ public sealed class StatInfo : ITimeSpanPlatformInfo
             stat = FindCpu(index);
         }
 
-        stat.CopyToPrevious();
-        stat.UserTotal = Int64.TryParse(span[range[1]], out var value) ? value : 0;
-        stat.NiceTotal = Int64.TryParse(span[range[2]], out value) ? value : 0;
-        stat.SystemTotal = Int64.TryParse(span[range[3]], out value) ? value : 0;
-        stat.IdleTotal = Int64.TryParse(span[range[4]], out value) ? value : 0;
-        stat.IoWaitTotal = Int64.TryParse(span[range[5]], out value) ? value : 0;
-        stat.IrqTotal = Int64.TryParse(span[range[6]], out value) ? value : 0;
-        stat.SoftIrqTotal = Int64.TryParse(span[range[7]], out value) ? value : 0;
-        stat.StealTotal = Int64.TryParse(span[range[8]], out value) ? value : 0;
-        stat.GuestTotal = Int64.TryParse(span[range[9]], out value) ? value : 0;
-        stat.GuestNiceTotal = Int64.TryParse(span[range[10]], out value) ? value : 0;
+        stat.User = Int64.TryParse(span[range[1]], out var value) ? value : 0;
+        stat.Nice = Int64.TryParse(span[range[2]], out value) ? value : 0;
+        stat.System = Int64.TryParse(span[range[3]], out value) ? value : 0;
+        stat.Idle = Int64.TryParse(span[range[4]], out value) ? value : 0;
+        stat.IoWait = Int64.TryParse(span[range[5]], out value) ? value : 0;
+        stat.Irq = Int64.TryParse(span[range[6]], out value) ? value : 0;
+        stat.SoftIrq = Int64.TryParse(span[range[7]], out value) ? value : 0;
+        stat.Steal = Int64.TryParse(span[range[8]], out value) ? value : 0;
+        stat.Guest = Int64.TryParse(span[range[9]], out value) ? value : 0;
+        stat.GuestNice = Int64.TryParse(span[range[10]], out value) ? value : 0;
     }
 
     private CpuStat FindCpu(int index)

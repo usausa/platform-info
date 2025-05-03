@@ -18,7 +18,7 @@ public sealed class MemoryInfo : IPlatformInfo
 
     public double MemoryUsage => MemoryTotal == 0 ? 0 : (double)(MemoryTotal - MemFree - Buffers - Cached) / MemoryTotal * 100;
 
-    public MemoryInfo()
+    internal MemoryInfo()
     {
         Update();
     }

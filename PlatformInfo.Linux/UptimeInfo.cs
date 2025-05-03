@@ -11,7 +11,7 @@ public sealed class UptimeInfo : IPlatformInfo
 
     public TimeSpan Uptime { get; private set; }
 
-    public UptimeInfo()
+    internal UptimeInfo()
     {
         Update();
     }

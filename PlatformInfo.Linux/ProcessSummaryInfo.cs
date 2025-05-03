@@ -14,7 +14,7 @@ public sealed class ProcessSummaryInfo : IPlatformInfo
 
     public int ThreadCount { get; private set; }
 
-    public ProcessSummaryInfo()
+    internal ProcessSummaryInfo()
     {
         Update();
     }

@@ -14,6 +14,8 @@ public static class LinuxPlatform
 
     public static MemoryInfo GetMemory() => new();
 
+    public static VirtualMemoryInfo GetVirtualMemory() => new();
+
     public static FileDescriptorInfo GetFileDescriptor() => new();
 
     public static ProcessSummaryInfo GetProcessSummary() => new();

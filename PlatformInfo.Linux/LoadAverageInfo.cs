@@ -15,11 +15,12 @@ public sealed class LoadAverageInfo : IPlatformInfo
 
     public double Average15 { get; private set; }
 
-    public LoadAverageInfo()
+    internal LoadAverageInfo()
     {
         Update();
     }
 
+    // ReSharper disable StringLiteralTypo
     public bool Update()
     {
         var now = DateTime.Now;
@@ -39,4 +40,5 @@ public sealed class LoadAverageInfo : IPlatformInfo
 
         return true;
     }
+    // ReSharper restore StringLiteralTypo
 }

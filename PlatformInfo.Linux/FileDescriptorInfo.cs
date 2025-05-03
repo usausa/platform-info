@@ -15,7 +15,7 @@ public sealed class FileDescriptorInfo : IPlatformInfo
 
     public long Max { get; private set; }
 
-    public FileDescriptorInfo()
+    internal FileDescriptorInfo()
     {
         Update();
     }
