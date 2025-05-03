@@ -53,6 +53,11 @@ internal static class ExampleLinux
         var uptime = LinuxPlatform.GetUptime();
         Console.WriteLine(uptime.Uptime);
 
+        var tcp = LinuxPlatform.GetTcp();
+        Console.WriteLine($"{tcp.Total} : {tcp.Established} {tcp.SynSent} {tcp.SynRecv} {tcp.FinWait1} {tcp.FinWait2} {tcp.TimeWait} {tcp.Close} {tcp.CloseWait} {tcp.LastAck} {tcp.Listen} {tcp.Closing}");
+        var tcp6 = LinuxPlatform.GetTcp();
+        Console.WriteLine($"{tcp6.Total} : {tcp6.Established} {tcp6.SynSent} {tcp6.SynRecv} {tcp6.FinWait1} {tcp6.FinWait2} {tcp6.TimeWait} {tcp6.Close} {tcp6.CloseWait} {tcp6.LastAck} {tcp6.Listen} {tcp6.Closing}");
+
         var vm = LinuxPlatform.GetVirtualMemory();
         Console.WriteLine($"{vm.PageIn} {vm.PageOut} {vm.SwapIn} {vm.SwapOut} {vm.PageFault} {vm.MajorPageFault} {vm.OutOfMemoryKiller}");
 
