@@ -8,7 +8,7 @@ public static class LinuxPlatform
 {
     public static UptimeInfo GetUptime() => new();
 
-    public static StatInfo GetStat() => new();
+    public static StaticsInfo GetStatics() => new();
 
     public static LoadAverageInfo GetLoadAverage() => new();
 
@@ -17,6 +17,8 @@ public static class LinuxPlatform
     public static VirtualMemoryInfo GetVirtualMemory() => new();
 
     public static FileDescriptorInfo GetFileDescriptor() => new();
+
+    public static NetworkDeviceInfo GetNetworkDevice() => new();
 
     public static TcpInfo GetTcp() => new(string.Empty);
 

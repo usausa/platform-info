@@ -15,14 +15,14 @@ internal static class ExampleLinux
 
         public long Total { get; private set; }
 
-        public void SnapshotFrom(CpuStat cpu)
+        public void SnapshotFrom(CpuStatics cpu)
         {
             Active = cpu.Active;
             Total = cpu.Total;
         }
     }
 
-    private sealed class StatSnapshot
+    private sealed class StaticsSnapshot
     {
         public DateTime UpdateAt { get; private set; }
 
@@ -32,7 +32,7 @@ internal static class ExampleLinux
 
         public long SoftIrq { get; private set; }
 
-        public void SnapshotFrom(StatInfo stat)
+        public void SnapshotFrom(StaticsInfo stat)
         {
             UpdateAt = stat.UpdateAt;
             Interrupt = stat.Interrupt;
@@ -41,7 +41,7 @@ internal static class ExampleLinux
         }
     }
 
-    private static double CalcUsage(CpuStat cpu, CpuSnapshot snapshot)
+    private static double CalcUsage(CpuStatics cpu, CpuSnapshot snapshot)
     {
         var total = cpu.Total - snapshot.Total;
         var active = cpu.Active - snapshot.Active;
@@ -52,6 +52,12 @@ internal static class ExampleLinux
     {
         var uptime = LinuxPlatform.GetUptime();
         Console.WriteLine(uptime.Uptime);
+
+        var network = LinuxPlatform.GetNetworkDevice();
+        foreach (var @if in network.Interfaces)
+        {
+            Console.WriteLine($"{@if.Interface} : {@if.RxBytes}");
+        }
 
         var tcp = LinuxPlatform.GetTcp();
         Console.WriteLine($"{tcp.Total} : {tcp.Established} {tcp.SynSent} {tcp.SynRecv} {tcp.FinWait1} {tcp.FinWait2} {tcp.TimeWait} {tcp.Close} {tcp.CloseWait} {tcp.LastAck} {tcp.Listen} {tcp.Closing}");
@@ -69,13 +75,13 @@ internal static class ExampleLinux
 
         var load = LinuxPlatform.GetLoadAverage();
 
-        var stat = LinuxPlatform.GetStat();
+        var stat = LinuxPlatform.GetStatics();
 
         Console.WriteLine(stat.ProcessRunning);
         Console.WriteLine(stat.ProcessBlocked);
         Console.WriteLine(stat.ContextSwitch);
 
-        var statSnapshot = new StatSnapshot();
+        var statSnapshot = new StaticsSnapshot();
         for (var i = 0; i < 10; i++)
         {
             Thread.Sleep(1000);

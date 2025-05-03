@@ -5,7 +5,7 @@ using System.Globalization;
 
 using PlatformInfo.Abstraction;
 
-public sealed class CpuStat
+public sealed class CpuStatics
 {
     public long User { get; internal set; }
 
@@ -31,20 +31,20 @@ public sealed class CpuStat
 
     public long Total => Active + Idle;
 
-    internal CpuStat()
+    internal CpuStatics()
     {
     }
 }
 
-public sealed class StatInfo : IPlatformInfo
+public sealed class StaticsInfo : IPlatformInfo
 {
-    private readonly List<CpuStat> cpu = new();
+    private readonly List<CpuStatics> cpu = new();
 
     public DateTime UpdateAt { get; private set; }
 
-    public CpuStat CpuTotal { get; } = new();
+    public CpuStatics CpuTotal { get; } = new();
 
-    public IReadOnlyList<CpuStat> Cpu => cpu;
+    public IReadOnlyList<CpuStatics> Cpu => cpu;
 
     // Total
     public long Interrupt { get; private set; }
@@ -59,7 +59,7 @@ public sealed class StatInfo : IPlatformInfo
 
     public int ProcessBlocked { get; private set; }
 
-    internal StatInfo()
+    internal StaticsInfo()
     {
         Update();
     }
@@ -115,7 +115,7 @@ public sealed class StatInfo : IPlatformInfo
         var range = (Span<Range>)stackalloc Range[11];
         span.Split(range, ' ', StringSplitOptions.RemoveEmptyEntries);
 
-        CpuStat stat;
+        CpuStatics stat;
         if (span[range[0]] is "cpu")
         {
             stat = CpuTotal;
@@ -138,11 +138,11 @@ public sealed class StatInfo : IPlatformInfo
         stat.GuestNice = Int64.TryParse(span[range[10]], out value) ? value : 0;
     }
 
-    private CpuStat FindCpu(int index)
+    private CpuStatics FindCpu(int index)
     {
         while (index >= cpu.Count)
         {
-            cpu.Add(new CpuStat());
+            cpu.Add(new CpuStatics());
         }
 
         return cpu[index];
