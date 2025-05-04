@@ -40,10 +40,6 @@ public static class LinuxPlatform
 
     // TODO CPU power ? (Intel)
 
-    // TODO GPU (feature)
-
-    // TODO Motherboard ? (feature)
-
     // TODO SMART ? (feature)
 
     // TODO Docker (feature)

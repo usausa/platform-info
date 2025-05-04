@@ -2,9 +2,7 @@ namespace PlatformInfo.Linux;
 
 using System;
 
-using PlatformInfo.Abstraction;
-
-public sealed class TcpInfo : IPlatformInfo
+public sealed class TcpInfo
 {
     private readonly string path;
 

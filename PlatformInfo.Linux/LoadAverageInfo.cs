@@ -3,9 +3,7 @@ namespace PlatformInfo.Linux;
 using System;
 using System.Globalization;
 
-using PlatformInfo.Abstraction;
-
-public sealed class LoadAverageInfo : IPlatformInfo
+public sealed class LoadAverageInfo
 {
     public DateTime UpdateAt { get; private set; }
 

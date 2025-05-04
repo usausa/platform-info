@@ -2,9 +2,7 @@ namespace PlatformInfo.Linux;
 
 using System;
 
-using PlatformInfo.Abstraction;
-
-public sealed class AdapterInfo : IPlatformInfo
+public sealed class AdapterInfo
 {
     private const string PowerSupplyPath = "/sys/class/power_supply/";
 

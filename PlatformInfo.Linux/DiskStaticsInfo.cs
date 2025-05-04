@@ -1,7 +1,5 @@
 namespace PlatformInfo.Linux;
 
-using PlatformInfo.Abstraction;
-
 public sealed class DiskStatics
 {
     internal bool Live { get; set; }
@@ -36,7 +34,7 @@ public sealed class DiskStatics
     }
 }
 
-public sealed class DiskStaticsInfo : IPlatformInfo
+public sealed class DiskStaticsInfo
 {
     private readonly List<DiskStatics> devices = new();
 

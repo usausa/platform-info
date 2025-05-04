@@ -2,9 +2,7 @@ namespace PlatformInfo.Linux;
 
 using System;
 
-using PlatformInfo.Abstraction;
-
-public class VirtualMemoryInfo : IPlatformInfo
+public class VirtualMemoryInfo
 {
     public DateTime UpdateAt { get; private set; }
 

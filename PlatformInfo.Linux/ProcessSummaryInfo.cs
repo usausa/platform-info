@@ -2,9 +2,7 @@ namespace PlatformInfo.Linux;
 
 using System.Text.RegularExpressions;
 
-using PlatformInfo.Abstraction;
-
-public sealed class ProcessSummaryInfo : IPlatformInfo
+public sealed class ProcessSummaryInfo
 {
     private readonly Regex regex = new(@"^\d+$", RegexOptions.Compiled);
 

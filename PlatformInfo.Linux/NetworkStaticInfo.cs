@@ -1,7 +1,5 @@
 namespace PlatformInfo.Linux;
 
-using PlatformInfo.Abstraction;
-
 public sealed class NetworkStatics
 {
     internal bool Live { get; set; }
@@ -46,7 +44,7 @@ public sealed class NetworkStatics
     }
 }
 
-public class NetworkStaticInfo : IPlatformInfo
+public class NetworkStaticInfo
 {
     private readonly List<NetworkStatics> interfaces = new();
 

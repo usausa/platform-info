@@ -3,8 +3,6 @@ namespace PlatformInfo.Linux;
 using System;
 using System.Globalization;
 
-using PlatformInfo.Abstraction;
-
 public sealed class CpuStatics
 {
     public long User { get; internal set; }
@@ -36,7 +34,7 @@ public sealed class CpuStatics
     }
 }
 
-public sealed class StaticsInfo : IPlatformInfo
+public sealed class StaticsInfo
 {
     private readonly List<CpuStatics> cpu = new();
 
