@@ -220,25 +220,25 @@ var networkCommand = new Command("network", "Get network statics");
 networkCommand.Handler = CommandHandler.Create(static () =>
 {
     var network = LinuxPlatform.GetNetworkStatic();
-    foreach (var @if in network.Interfaces)
+    foreach (var nif in network.Interfaces)
     {
-        Console.WriteLine($"Interface:    {@if.Interface}");
-        Console.WriteLine($"RxBytes:      {@if.RxBytes}");
-        Console.WriteLine($"RxPackets:    {@if.RxPackets}");
-        Console.WriteLine($"RxErrors:     {@if.RxErrors}");
-        Console.WriteLine($"RxDropped:    {@if.RxDropped}");
-        Console.WriteLine($"RxFifo:       {@if.RxFifo}");
-        Console.WriteLine($"RxFrame:      {@if.RxFrame}");
-        Console.WriteLine($"RxCompressed: {@if.RxCompressed}");
-        Console.WriteLine($"RxMulticast:  {@if.RxMulticast}");
-        Console.WriteLine($"TxBytes:      {@if.TxBytes}");
-        Console.WriteLine($"TxPackets:    {@if.TxPackets}");
-        Console.WriteLine($"TxErrors:     {@if.TxErrors}");
-        Console.WriteLine($"TxDropped:    {@if.TxDropped}");
-        Console.WriteLine($"TxFifo:       {@if.TxFifo}");
-        Console.WriteLine($"TxCollisions: {@if.TxCollisions}");
-        Console.WriteLine($"TxCarrier:    {@if.TxCarrier}");
-        Console.WriteLine($"TxCompressed: {@if.TxCompressed}");
+        Console.WriteLine($"Interface:    {nif.Interface}");
+        Console.WriteLine($"RxBytes:      {nif.RxBytes}");
+        Console.WriteLine($"RxPackets:    {nif.RxPackets}");
+        Console.WriteLine($"RxErrors:     {nif.RxErrors}");
+        Console.WriteLine($"RxDropped:    {nif.RxDropped}");
+        Console.WriteLine($"RxFifo:       {nif.RxFifo}");
+        Console.WriteLine($"RxFrame:      {nif.RxFrame}");
+        Console.WriteLine($"RxCompressed: {nif.RxCompressed}");
+        Console.WriteLine($"RxMulticast:  {nif.RxMulticast}");
+        Console.WriteLine($"TxBytes:      {nif.TxBytes}");
+        Console.WriteLine($"TxPackets:    {nif.TxPackets}");
+        Console.WriteLine($"TxErrors:     {nif.TxErrors}");
+        Console.WriteLine($"TxDropped:    {nif.TxDropped}");
+        Console.WriteLine($"TxFifo:       {nif.TxFifo}");
+        Console.WriteLine($"TxCollisions: {nif.TxCollisions}");
+        Console.WriteLine($"TxCarrier:    {nif.TxCarrier}");
+        Console.WriteLine($"TxCompressed: {nif.TxCompressed}");
     }
 });
 rootCommand.Add(networkCommand);
