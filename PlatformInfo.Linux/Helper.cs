@@ -9,6 +9,6 @@ internal static class Helper
             8 => true, // SATA
             179 => true, // MMC
             239 => true, // NVMe
-            _ => false,
+            _ => false
         };
 }
