@@ -37,8 +37,4 @@ public static class LinuxPlatform
     public static MainsAdapterDevice GetMainsAdapter() => new();
 
     public static HardwareMonitor[] GetHardwareMonitors() => HardwareMonitor.GetMonitors();
-
-    // TODO SMART? (feature)
-
-    // TODO Docker (feature / own assembly?)
 }
