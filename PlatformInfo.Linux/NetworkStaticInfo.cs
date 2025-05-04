@@ -66,7 +66,7 @@ public class NetworkStaticInfo : IPlatformInfo
             network.Live = false;
         }
 
-        var range = (Span<Range>)stackalloc Range[17];
+        var range = (Span<Range>)stackalloc Range[18];
         using var reader = new StreamReader("/proc/net/dev");
         reader.ReadLine();
         while (reader.ReadLine() is { } line)

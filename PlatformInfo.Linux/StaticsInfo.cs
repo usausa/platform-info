@@ -78,7 +78,7 @@ public sealed class StaticsInfo : IPlatformInfo
             }
             else if (span.StartsWith("intr"))
             {
-                Interrupt = ExtractInt64(span, 3);
+                Interrupt = ExtractInt64(span);
             }
             else if (span.StartsWith("ctxt"))
             {
@@ -94,7 +94,7 @@ public sealed class StaticsInfo : IPlatformInfo
             }
             else if (span.StartsWith("softirq"))
             {
-                SoftIrq = ExtractInt64(span, 12);
+                SoftIrq = ExtractInt64(span);
             }
         }
 
@@ -106,7 +106,7 @@ public sealed class StaticsInfo : IPlatformInfo
 
     private void UpdateCpuValue(ReadOnlySpan<char> span)
     {
-        var range = (Span<Range>)stackalloc Range[11];
+        var range = (Span<Range>)stackalloc Range[12];
         span.Split(range, ' ', StringSplitOptions.RemoveEmptyEntries);
 
         CpuStatics stat;
@@ -142,15 +142,15 @@ public sealed class StaticsInfo : IPlatformInfo
         return cpu[index];
     }
 
-    private static long ExtractInt64(ReadOnlySpan<char> span, int n = 2)
+    private static long ExtractInt64(ReadOnlySpan<char> span)
     {
-        var range = (Span<Range>)stackalloc Range[n];
+        var range = (Span<Range>)stackalloc Range[3];
         return (span.Split(range, ' ', StringSplitOptions.RemoveEmptyEntries) > 1) && Int64.TryParse(span[range[1]], out var result) ? result : 0;
     }
 
-    private static int ExtractInt32(ReadOnlySpan<char> span, int n = 2)
+    private static int ExtractInt32(ReadOnlySpan<char> span)
     {
-        var range = (Span<Range>)stackalloc Range[n];
+        var range = (Span<Range>)stackalloc Range[3];
         return (span.Split(range, ' ', StringSplitOptions.RemoveEmptyEntries) > 1) && Int32.TryParse(span[range[1]], out var result) ? result : 0;
     }
 }

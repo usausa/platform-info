@@ -56,7 +56,7 @@ public sealed class DiskStaticsInfo : IPlatformInfo
             device.Live = false;
         }
 
-        var range = (Span<Range>)stackalloc Range[20];
+        var range = (Span<Range>)stackalloc Range[21];
         using var reader = new StreamReader("/proc/diskstats");
         while (reader.ReadLine() is { } line)
         {

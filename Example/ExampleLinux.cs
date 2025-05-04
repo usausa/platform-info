@@ -50,6 +50,21 @@ internal static class ExampleLinux
 
     public static void LinuxMain()
     {
+        var partitions = LinuxPlatform.GetPartitions();
+        foreach (var partition in partitions)
+        {
+            var joinedMounts = string.Join(", ", partition.MountPoints);
+            Console.WriteLine($"{partition.Name}\t{joinedMounts}");
+
+            var drive = new DriveInfo(partition.MountPoints[0]);
+
+            var available = drive.AvailableFreeSpace;
+            var used = drive.TotalSize - drive.TotalFreeSpace;
+            var usage = (double)used / (available + used) * 100;
+
+            Console.WriteLine($"  {usage:F2} {drive.TotalSize / 1024} {used / 1024} {available / 1024}");
+        }
+
         var uptime = LinuxPlatform.GetUptime();
         Console.WriteLine(uptime.Uptime);
 

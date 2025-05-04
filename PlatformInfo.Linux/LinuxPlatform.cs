@@ -16,7 +16,7 @@ public static class LinuxPlatform
 
     public static VirtualMemoryInfo GetVirtualMemory() => new();
 
-    public static IEnumerable<DiskDevice> GetDiskList() => DiskDevice.GetDiskList();
+    public static Partition[] GetPartitions() => Partition.GetPartitions();
 
     public static DiskStaticsInfo GetDiskStatics() => new();
 

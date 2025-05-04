@@ -60,7 +60,7 @@ public sealed class ProcessSummaryInfo : IPlatformInfo
 
     private static int ExtractInt32(ReadOnlySpan<char> span)
     {
-        var range = (Span<Range>)stackalloc Range[2];
+        var range = (Span<Range>)stackalloc Range[3];
         return (span.Split(range, '\t', StringSplitOptions.RemoveEmptyEntries) > 1) && Int32.TryParse(span[range[1]], out var result) ? result : 0;
     }
 }
