@@ -79,7 +79,7 @@ public sealed class BatteryDevice
         var file = Path.Combine(path, name);
         if (File.Exists(file))
         {
-            return File.ReadAllText(file);
+            return File.ReadAllText(file).Trim();
         }
 
         return string.Empty;

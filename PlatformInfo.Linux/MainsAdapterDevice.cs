@@ -27,7 +27,7 @@ public sealed class MainsAdapterDevice
             return false;
         }
 
-        Online = ReadFile("online").AsSpan().StartsWith("1");
+        Online = ReadFile("online") == "1";
 
         UpdateAt = DateTime.Now;
 
@@ -60,7 +60,7 @@ public sealed class MainsAdapterDevice
         var file = Path.Combine(path, name);
         if (File.Exists(file))
         {
-            return File.ReadAllText(file);
+            return File.ReadAllText(file).Trim();
         }
 
         return string.Empty;
