@@ -30,17 +30,15 @@ public static class LinuxPlatform
 
     public static ProcessSummaryInfo GetProcessSummary() => new();
 
-    public static BatteryInfo GetBatteryInfo() => new();
+    public static CpuDevice GetCpu() => new();
 
-    public static AdapterInfo GetAdapterInfo() => new();
+    public static BatteryDevice GetBattery() => new();
 
-    // TODO Temperature sensor
+    public static MainsAdapterDevice GetMainsAdapter() => new();
 
-    // TODO CPU frequency
+    public static HardwareMonitor[] GetHardwareMonitors() => HardwareMonitor.GetMonitors();
 
-    // TODO CPU power ? (Intel)
+    // TODO SMART? (feature)
 
-    // TODO SMART ? (feature)
-
-    // TODO Docker (feature)
+    // TODO Docker (feature / own assembly?)
 }

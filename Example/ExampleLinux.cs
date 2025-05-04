@@ -119,7 +119,7 @@ internal static class ExampleLinux
         }
 
         var cpuSnapshot = new CpuSnapshot();
-        var cpuSnapshots = new CpuSnapshot[stat.Cpu.Count];
+        var cpuSnapshots = new CpuSnapshot[stat.CpuCore.Count];
         for (var i = 0; i < cpuSnapshots.Length; i++)
         {
             cpuSnapshots[i] = new CpuSnapshot();
@@ -133,7 +133,7 @@ internal static class ExampleLinux
             cpuSnapshot.SnapshotFrom(stat.CpuTotal);
             for (var j = 0; j < cpuSnapshots.Length; j++)
             {
-                cpuSnapshots[j].SnapshotFrom(stat.Cpu[j]);
+                cpuSnapshots[j].SnapshotFrom(stat.CpuCore[j]);
             }
             stat.Update();
             load.Update();
@@ -142,7 +142,7 @@ internal static class ExampleLinux
             sb.Append(CalcUsage(stat.CpuTotal, cpuSnapshot).ToString("F2", CultureInfo.InvariantCulture).PadLeft(7));
             for (var j = 0; j < cpuSnapshots.Length; j++)
             {
-                sb.Append(CalcUsage(stat.Cpu[j], cpuSnapshots[j]).ToString("F2", CultureInfo.InvariantCulture).PadLeft(7));
+                sb.Append(CalcUsage(stat.CpuCore[j], cpuSnapshots[j]).ToString("F2", CultureInfo.InvariantCulture).PadLeft(7));
             }
 
             Console.WriteLine(sb);

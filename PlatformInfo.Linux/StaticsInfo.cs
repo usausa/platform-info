@@ -1,10 +1,11 @@
 namespace PlatformInfo.Linux;
 
 using System;
-using System.Globalization;
 
 public sealed class CpuStatics
 {
+    public string Name { get; }
+
     public long User { get; internal set; }
 
     public long Nice { get; internal set; }
@@ -29,20 +30,21 @@ public sealed class CpuStatics
 
     public long Total => Active + Idle;
 
-    internal CpuStatics()
+    internal CpuStatics(string name)
     {
+        Name = name;
     }
 }
 
 public sealed class StaticsInfo
 {
-    private readonly List<CpuStatics> cpu = new();
+    private readonly List<CpuStatics> cpuCore = new();
 
     public DateTime UpdateAt { get; private set; }
 
-    public CpuStatics CpuTotal { get; } = new();
+    public CpuStatics CpuTotal { get; } = new("total");
 
-    public IReadOnlyList<CpuStatics> Cpu => cpu;
+    public IReadOnlyList<CpuStatics> CpuCore => cpuCore;
 
     // Total
     public long Interrupt { get; private set; }
@@ -107,16 +109,7 @@ public sealed class StaticsInfo
         var range = (Span<Range>)stackalloc Range[12];
         span.Split(range, ' ', StringSplitOptions.RemoveEmptyEntries);
 
-        CpuStatics stat;
-        if (span[range[0]] is "cpu")
-        {
-            stat = CpuTotal;
-        }
-        else
-        {
-            var index = Int32.Parse(span[range[0]][3..], CultureInfo.InvariantCulture);
-            stat = FindCpu(index);
-        }
+        var stat = span[range[0]] is "cpu" ? CpuTotal : FindCpu(span[range[0]]);
 
         stat.User = Int64.TryParse(span[range[1]], out var value) ? value : 0;
         stat.Nice = Int64.TryParse(span[range[2]], out value) ? value : 0;
@@ -130,14 +123,19 @@ public sealed class StaticsInfo
         stat.GuestNice = Int64.TryParse(span[range[10]], out value) ? value : 0;
     }
 
-    private CpuStatics FindCpu(int index)
+    private CpuStatics FindCpu(ReadOnlySpan<char> name)
     {
-        while (index >= cpu.Count)
+        foreach (var core in cpuCore)
         {
-            cpu.Add(new CpuStatics());
+            if (core.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
+            {
+                return core;
+            }
         }
 
-        return cpu[index];
+        var cpu = new CpuStatics(name.ToString());
+        cpuCore.Add(cpu);
+        return cpu;
     }
 
     private static long ExtractInt64(ReadOnlySpan<char> span)

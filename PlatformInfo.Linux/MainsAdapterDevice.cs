@@ -2,7 +2,7 @@ namespace PlatformInfo.Linux;
 
 using System;
 
-public sealed class AdapterInfo
+public sealed class MainsAdapterDevice
 {
     private const string PowerSupplyPath = "/sys/class/power_supply/";
 
@@ -14,7 +14,7 @@ public sealed class AdapterInfo
 
     public bool Online { get; private set; }
 
-    internal AdapterInfo()
+    internal MainsAdapterDevice()
     {
         path = FindAdapter();
         Update();

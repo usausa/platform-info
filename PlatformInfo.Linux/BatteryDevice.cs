@@ -2,7 +2,7 @@ namespace PlatformInfo.Linux;
 
 using System;
 
-public sealed class BatteryInfo
+public sealed class BatteryDevice
 {
     private const string PowerSupplyPath = "/sys/class/power_supply/";
 
@@ -28,7 +28,7 @@ public sealed class BatteryInfo
     // mAh
     public double ChargeFull { get; private set; }
 
-    internal BatteryInfo()
+    internal BatteryDevice()
     {
         path = FindBattery();
         Update();
