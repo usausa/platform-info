@@ -5,9 +5,9 @@ using System.Text.RegularExpressions;
 
 public sealed class HardwareSensor
 {
-    public DateTime UpdateAt { get; private set; }
+    private readonly string valuePath;
 
-    private readonly string path;
+    public DateTime UpdateAt { get; private set; }
 
     public string Type { get; }
 
@@ -15,9 +15,9 @@ public sealed class HardwareSensor
 
     public long Value { get; private set; }
 
-    internal HardwareSensor(string path, string type, string label)
+    internal HardwareSensor(string valuePath, string type, string label)
     {
-        this.path = path;
+        this.valuePath = valuePath;
         Type = type;
         Label = label;
         Update();
@@ -25,7 +25,7 @@ public sealed class HardwareSensor
 
     public bool Update()
     {
-        Value = Int64.TryParse(File.ReadAllText(path).AsSpan().Trim(), out var value) ? value : 0;
+        Value = Int64.TryParse(File.ReadAllText(valuePath).AsSpan().Trim(), out var value) ? value : 0;
 
         UpdateAt = DateTime.Now;
 
@@ -89,7 +89,7 @@ public sealed class HardwareMonitor
 
     private static string ExtractSensorType(string filename)
     {
-        var match = Regex.Match(filename, @"^\D+");
+        var match = Regex.Match(filename, @"^\d+");
         return match.Success ? match.Value.TrimEnd('_') : filename;
     }
 }
