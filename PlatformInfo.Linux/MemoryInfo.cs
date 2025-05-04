@@ -6,15 +6,15 @@ public sealed class MemoryInfo
 {
     public DateTime UpdateAt { get; private set; }
 
-    public long MemoryTotal { get; private set; }
+    public long Total { get; private set; }
 
-    public long MemFree { get; private set; }
+    public long Free { get; private set; }
 
     public long Buffers { get; private set; }
 
     public long Cached { get; private set; }
 
-    public double MemoryUsage => MemoryTotal == 0 ? 0 : (double)(MemoryTotal - MemFree - Buffers - Cached) / MemoryTotal * 100;
+    public double Usage => Total == 0 ? 0 : (double)(Total - Free - Buffers - Cached) / Total * 100;
 
     internal MemoryInfo()
     {
@@ -29,11 +29,11 @@ public sealed class MemoryInfo
             var span = line.AsSpan();
             if (span.StartsWith("MemTotal"))
             {
-                MemoryTotal = ExtractInt64(span);
+                Total = ExtractInt64(span);
             }
             else if (span.StartsWith("MemFree"))
             {
-                MemFree = ExtractInt64(span);
+                Free = ExtractInt64(span);
             }
             else if (span.StartsWith("Buffers"))
             {

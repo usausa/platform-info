@@ -16,17 +16,17 @@ public sealed class BatteryDevice
 
     public string Status { get; private set; } = string.Empty;
 
-    // mV
-    public double Voltage { get; private set; }
+    // uV
+    public long Voltage { get; private set; }
 
-    // mA
-    public double Current { get; private set; }
+    // uA
+    public long Current { get; private set; }
 
-    // mAh
-    public double Charge { get; private set; }
+    // uAh
+    public long Charge { get; private set; }
 
-    // mAh
-    public double ChargeFull { get; private set; }
+    // uAh
+    public long ChargeFull { get; private set; }
 
     internal BatteryDevice()
     {
@@ -43,10 +43,10 @@ public sealed class BatteryDevice
 
         Capacity = ReadFileAsInt32("capacity");
         Status = ReadFile("status");
-        Voltage = ReadFileAsMilliDouble("voltage_now");
-        Current = ReadFileAsMilliDouble("current_now");
-        Charge = ReadFileAsMilliDouble("charge_now");
-        ChargeFull = ReadFileAsMilliDouble("charge_full");
+        Voltage = ReadFileAsInt64("voltage_now");
+        Current = ReadFileAsInt64("current_now");
+        Charge = ReadFileAsInt64("charge_now");
+        ChargeFull = ReadFileAsInt64("charge_full");
 
         UpdateAt = DateTime.Now;
 
@@ -96,7 +96,7 @@ public sealed class BatteryDevice
         return Int32.TryParse(value, out var result) ? result : 0;
     }
 
-    private double ReadFileAsMilliDouble(string name)
+    private long ReadFileAsInt64(string name)
     {
         var value = ReadFile(name);
         if (String.IsNullOrEmpty(value))
@@ -104,6 +104,6 @@ public sealed class BatteryDevice
             return 0;
         }
 
-        return Double.TryParse(value, out var result) ? result / 1000 : 0;
+        return Int64.TryParse(value, out var result) ? result : 0;
     }
 }

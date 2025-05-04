@@ -4,6 +4,7 @@ using System.CommandLine.NamingConventionBinder;
 using PlatformInfo.Linux;
 
 #pragma warning disable CA1416
+// ReSharper disable ConvertIfStatementToConditionalTernaryExpression
 // ReSharper disable IdentifierTypo
 // ReSharper disable StringLiteralTypo
 // ReSharper disable UseObjectOrCollectionInitializer
@@ -28,10 +29,50 @@ var statCommand = new Command("stat", "Get statics");
 statCommand.Handler = CommandHandler.Create(static () =>
 {
     var statics = LinuxPlatform.GetStatics();
-    Console.WriteLine($"Interrupt:     {statics.Interrupt}");
-    Console.WriteLine($"ContextSwitch: {statics.ContextSwitch}");
-    Console.WriteLine($"SoftIrq:       {statics.SoftIrq}");
-    // TODO
+    Console.WriteLine($"Interrupt:      {statics.Interrupt}");
+    Console.WriteLine($"ContextSwitch:  {statics.ContextSwitch}");
+    Console.WriteLine($"SoftIrq:        {statics.SoftIrq}");
+    Console.WriteLine($"ProcessRunning: {statics.ProcessRunning}");
+    Console.WriteLine($"ProcessBlocked: {statics.ProcessBlocked}");
+
+    Console.WriteLine($"User:           {statics.CpuTotal.User}");
+    Console.WriteLine($"Nice:           {statics.CpuTotal.Nice}");
+    Console.WriteLine($"System:         {statics.CpuTotal.System}");
+    Console.WriteLine($"Idle:           {statics.CpuTotal.Idle}");
+    Console.WriteLine($"IoWait:         {statics.CpuTotal.IoWait}");
+    Console.WriteLine($"Irq:            {statics.CpuTotal.Irq}");
+    Console.WriteLine($"SoftIrq:        {statics.CpuTotal.SoftIrq}");
+    Console.WriteLine($"Steal:          {statics.CpuTotal.Steal}");
+    Console.WriteLine($"Guest:          {statics.CpuTotal.Guest}");
+    Console.WriteLine($"GuestNice:      {statics.CpuTotal.GuestNice}");
+
+    Console.WriteLine();
+
+    for (var i = 0; i < 10; i++)
+    {
+        var previousValues = statics.CpuCores
+            .Select(x => new
+            {
+                x.Active,
+                x.Total
+            })
+            .ToList();
+
+        Thread.Sleep(1000);
+
+        statics.Update();
+
+        for (var j = 0; j < statics.CpuCores.Count; j++)
+        {
+            var core = statics.CpuCores[j];
+            var activeDiff = core.Active - previousValues[j].Active;
+            var totalDiff = core.Total - previousValues[j].Total;
+            var usage = (int)Math.Ceiling((double)activeDiff / totalDiff * 100.0);
+
+            Console.WriteLine($"Name:  {core.Name}");
+            Console.WriteLine($"Usage: {usage}");
+        }
+    }
 });
 rootCommand.Add(statCommand);
 
@@ -41,7 +82,10 @@ rootCommand.Add(statCommand);
 var loadCommand = new Command("load", "Get load average");
 loadCommand.Handler = CommandHandler.Create(static () =>
 {
-    // TODO
+    var load = LinuxPlatform.GetLoadAverage();
+    Console.WriteLine($"Average1:  {load.Average1:F2}");
+    Console.WriteLine($"Average5:  {load.Average5:F2}");
+    Console.WriteLine($"Average15: {load.Average15:F2}");
 });
 rootCommand.Add(loadCommand);
 
@@ -51,7 +95,12 @@ rootCommand.Add(loadCommand);
 var memoryCommand = new Command("memory", "Get memory");
 memoryCommand.Handler = CommandHandler.Create(static () =>
 {
-    // TODO
+    var memory = LinuxPlatform.GetMemory();
+    Console.WriteLine($"Total:   {memory.Total}");
+    Console.WriteLine($"Free:    {memory.Free}");
+    Console.WriteLine($"Buffers: {memory.Buffers}");
+    Console.WriteLine($"Cached:  {memory.Cached}");
+    Console.WriteLine($"Usage:   {(int)Math.Ceiling(memory.Usage)}");
 });
 rootCommand.Add(memoryCommand);
 
@@ -61,7 +110,14 @@ rootCommand.Add(memoryCommand);
 var virtualCommand = new Command("virtual", "Get virtual memory");
 virtualCommand.Handler = CommandHandler.Create(static () =>
 {
-    // TODO
+    var vm = LinuxPlatform.GetVirtualMemory();
+    Console.WriteLine($"PageIn:            {vm.PageIn}");
+    Console.WriteLine($"PageOut:           {vm.PageOut}");
+    Console.WriteLine($"SwapIn:            {vm.SwapIn}");
+    Console.WriteLine($"SwapOut:           {vm.SwapOut}");
+    Console.WriteLine($"PageFault:         {vm.PageFault}");
+    Console.WriteLine($"MajorPageFault:    {vm.MajorPageFault}");
+    Console.WriteLine($"OutOfMemoryKiller: {vm.OutOfMemoryKiller}");
 });
 rootCommand.Add(virtualCommand);
 
@@ -71,7 +127,21 @@ rootCommand.Add(virtualCommand);
 var partitionCommand = new Command("partition", "Get parition");
 partitionCommand.Handler = CommandHandler.Create(static () =>
 {
-    // TODO
+    var partitions = LinuxPlatform.GetPartitions();
+    foreach (var partition in partitions)
+    {
+        var drive = new DriveInfo(partition.MountPoints[0]);
+        var used = drive.TotalSize - drive.TotalFreeSpace;
+        var available = drive.AvailableFreeSpace;
+        var usage = (int)Math.Ceiling((double)used / (available + used) * 100);
+
+        Console.WriteLine($"Name:          {partition.Name}");
+        Console.WriteLine($"MountPoint:    {String.Join(' ', partition.MountPoints)}");
+        Console.WriteLine($"TotalSize:     {drive.TotalSize / 1024}");
+        Console.WriteLine($"UsedSize:      {used / 1024}");
+        Console.WriteLine($"AvailableSize: {available / 1024}");
+        Console.WriteLine($"Usage:         {usage}");
+    }
 });
 rootCommand.Add(partitionCommand);
 
@@ -81,7 +151,52 @@ rootCommand.Add(partitionCommand);
 var diskCommand = new Command("disk", "Get disk statics");
 diskCommand.Handler = CommandHandler.Create(static () =>
 {
-    // TODO
+    var disk = LinuxPlatform.GetDiskStatics();
+    foreach (var device in disk.Devices)
+    {
+        Console.WriteLine($"Name:           {device.Name}");
+        Console.WriteLine($"ReadCompleted:  {device.ReadCompleted}");
+        Console.WriteLine($"ReadMerged:     {device.ReadMerged}");
+        Console.WriteLine($"ReadSectors:    {device.ReadSectors}");
+        Console.WriteLine($"ReadTime:       {device.ReadTime}");
+        Console.WriteLine($"WriteCompleted: {device.WriteCompleted}");
+        Console.WriteLine($"WriteMerged:    {device.WriteMerged}");
+        Console.WriteLine($"WriteSectors:   {device.WriteSectors}");
+        Console.WriteLine($"WriteTime:      {device.WriteTime}");
+        Console.WriteLine($"IosInProgress:  {device.IosInProgress}");
+        Console.WriteLine($"IoTime:         {device.IoTime}");
+        Console.WriteLine($"WeightIoTime:   {device.WeightIoTime}");
+    }
+
+    Console.WriteLine();
+
+    for (var i = 0; i < 10; i++)
+    {
+        var previousUpdateAt = disk.UpdateAt;
+        var previousValues = disk.Devices
+            .Select(x => new
+            {
+                x.ReadCompleted,
+                x.WriteCompleted
+            })
+            .ToList();
+
+        Thread.Sleep(1000);
+
+        disk.Update();
+
+        var timespan = (disk.UpdateAt - previousUpdateAt).TotalSeconds;
+        for (var j = 0; j < disk.Devices.Count; j++)
+        {
+            var device = disk.Devices[j];
+            var readPerSec = (int)Math.Ceiling((device.ReadCompleted - previousValues[j].ReadCompleted) / timespan);
+            var writePerSec = (int)Math.Ceiling((device.WriteCompleted - previousValues[j].WriteCompleted) / timespan);
+
+            Console.WriteLine($"Name:        {device.Name}");
+            Console.WriteLine($"ReadPerSec:  {readPerSec}");
+            Console.WriteLine($"WritePerSec: {writePerSec}");
+        }
+    }
 });
 rootCommand.Add(diskCommand);
 
@@ -91,9 +206,42 @@ rootCommand.Add(diskCommand);
 var fdCommand = new Command("fd", "Get file descriptor");
 fdCommand.Handler = CommandHandler.Create(static () =>
 {
-    // TODO
+    var fd = LinuxPlatform.GetFileDescriptor();
+    Console.WriteLine($"Allocated: {fd.Allocated}");
+    Console.WriteLine($"Used:      {fd.Used}");
+    Console.WriteLine($"Max:       {fd.Max}");
 });
 rootCommand.Add(fdCommand);
+
+//--------------------------------------------------------------------------------
+// NetworkStatic
+//--------------------------------------------------------------------------------
+var networkCommand = new Command("network", "Get network statics");
+networkCommand.Handler = CommandHandler.Create(static () =>
+{
+    var network = LinuxPlatform.GetNetworkStatic();
+    foreach (var @if in network.Interfaces)
+    {
+        Console.WriteLine($"Interface:    {@if.Interface}");
+        Console.WriteLine($"RxBytes:      {@if.RxBytes}");
+        Console.WriteLine($"RxPackets:    {@if.RxPackets}");
+        Console.WriteLine($"RxErrors:     {@if.RxErrors}");
+        Console.WriteLine($"RxDropped:    {@if.RxDropped}");
+        Console.WriteLine($"RxFifo:       {@if.RxFifo}");
+        Console.WriteLine($"RxFrame:      {@if.RxFrame}");
+        Console.WriteLine($"RxCompressed: {@if.RxCompressed}");
+        Console.WriteLine($"RxMulticast:  {@if.RxMulticast}");
+        Console.WriteLine($"TxBytes:      {@if.TxBytes}");
+        Console.WriteLine($"TxPackets:    {@if.TxPackets}");
+        Console.WriteLine($"TxErrors:     {@if.TxErrors}");
+        Console.WriteLine($"TxDropped:    {@if.TxDropped}");
+        Console.WriteLine($"TxFifo:       {@if.TxFifo}");
+        Console.WriteLine($"TxCollisions: {@if.TxCollisions}");
+        Console.WriteLine($"TxCarrier:    {@if.TxCarrier}");
+        Console.WriteLine($"TxCompressed: {@if.TxCompressed}");
+    }
+});
+rootCommand.Add(networkCommand);
 
 //--------------------------------------------------------------------------------
 // Tcp
@@ -145,7 +293,9 @@ rootCommand.Add(tcp6Command);
 var processCommand = new Command("process", "Get process");
 processCommand.Handler = CommandHandler.Create(static () =>
 {
-    // TODO
+    var process = LinuxPlatform.GetProcessSummary();
+    Console.WriteLine($"ProcessCount: {process.ProcessCount}");
+    Console.WriteLine($"ThreadCount:  {process.ThreadCount}");
 });
 rootCommand.Add(processCommand);
 
@@ -155,7 +305,21 @@ rootCommand.Add(processCommand);
 var cpuCommand = new Command("cpu", "Get cpu");
 cpuCommand.Handler = CommandHandler.Create(static () =>
 {
-    // TODO
+    var cpu = LinuxPlatform.GetCpu();
+    Console.WriteLine("Frequency");
+    foreach (var core in cpu.Cores)
+    {
+        Console.WriteLine($"{core.Name}: {core.Frequency}");
+    }
+
+    if (cpu.Powers.Count > 0)
+    {
+        Console.WriteLine("Power");
+        foreach (var power in cpu.Powers)
+        {
+            Console.WriteLine($"{power.Name}: {power.Energy / 1000.0}");
+        }
+    }
 });
 rootCommand.Add(cpuCommand);
 
@@ -165,7 +329,20 @@ rootCommand.Add(cpuCommand);
 var batteryCommand = new Command("battery", "Get battery");
 batteryCommand.Handler = CommandHandler.Create(static () =>
 {
-    // TODO
+    var battery = LinuxPlatform.GetBattery();
+    if (battery.Supported)
+    {
+        Console.WriteLine($"Capacity:   {battery.Capacity}");
+        Console.WriteLine($"Status:     {battery.Status}");
+        Console.WriteLine($"Voltage:    {battery.Voltage / 1000.0:F2}");
+        Console.WriteLine($"Current:    {battery.Current / 1000.0:F2}");
+        Console.WriteLine($"Charge:     {battery.Charge / 1000.0:F2}");
+        Console.WriteLine($"ChargeFull: {battery.ChargeFull / 1000.0:F2}");
+    }
+    else
+    {
+        Console.WriteLine("No battery found");
+    }
 });
 rootCommand.Add(batteryCommand);
 
@@ -175,7 +352,15 @@ rootCommand.Add(batteryCommand);
 var acCommand = new Command("ac", "Get ac");
 acCommand.Handler = CommandHandler.Create(static () =>
 {
-    // TODO
+    var adapter = LinuxPlatform.GetMainsAdapter();
+    if (adapter.Supported)
+    {
+        Console.WriteLine($"Online: {adapter.Online}");
+    }
+    else
+    {
+        Console.WriteLine("No adapter found");
+    }
 });
 rootCommand.Add(acCommand);
 
@@ -185,12 +370,22 @@ rootCommand.Add(acCommand);
 var hwmonCommand = new Command("hwmon", "Get hwmon");
 hwmonCommand.Handler = CommandHandler.Create(static () =>
 {
-    // TODO
+    var monitors = LinuxPlatform.GetHardwareMonitors();
+    foreach (var monitor in monitors)
+    {
+        Console.WriteLine($"Monitor: {monitor.Type}");
+        Console.WriteLine($"Name:    {monitor.Name}");
+        foreach (var sensor in monitor.Sensors)
+        {
+            Console.WriteLine($"Sensor:  {sensor.Type}");
+            Console.WriteLine($"Label:   {sensor.Label}");
+            Console.WriteLine($"Value:   {sensor.Value}");
+        }
+    }
 });
 rootCommand.Add(hwmonCommand);
 
 //--------------------------------------------------------------------------------
 // Run
 //--------------------------------------------------------------------------------
-rootCommand.Invoke(["tcp6"]);
-//rootCommand.Invoke(args);
+rootCommand.Invoke(args);

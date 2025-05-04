@@ -38,13 +38,13 @@ public sealed class CpuStatics
 
 public sealed class StaticsInfo
 {
-    private readonly List<CpuStatics> cpuCore = new();
+    private readonly List<CpuStatics> cpuCores = new();
 
     public DateTime UpdateAt { get; private set; }
 
     public CpuStatics CpuTotal { get; } = new("total");
 
-    public IReadOnlyList<CpuStatics> CpuCore => cpuCore;
+    public IReadOnlyList<CpuStatics> CpuCores => cpuCores;
 
     // Total
     public long Interrupt { get; private set; }
@@ -125,7 +125,7 @@ public sealed class StaticsInfo
 
     private CpuStatics FindCpu(ReadOnlySpan<char> name)
     {
-        foreach (var core in cpuCore)
+        foreach (var core in cpuCores)
         {
             if (core.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
             {
@@ -134,7 +134,7 @@ public sealed class StaticsInfo
         }
 
         var cpu = new CpuStatics(name.ToString());
-        cpuCore.Add(cpu);
+        cpuCores.Add(cpu);
         return cpu;
     }
 

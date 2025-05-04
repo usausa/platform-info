@@ -4,7 +4,7 @@ public sealed class DiskStatics
 {
     internal bool Live { get; set; }
 
-    public string DeviceName { get; }
+    public string Name { get; }
 
     public long ReadCompleted { get; internal set; }
 
@@ -28,9 +28,9 @@ public sealed class DiskStatics
 
     public long WeightIoTime { get; internal set; }
 
-    internal DiskStatics(string deviceName)
+    internal DiskStatics(string name)
     {
-        DeviceName = deviceName;
+        Name = name;
     }
 }
 
@@ -75,7 +75,7 @@ public sealed class DiskStaticsInfo
             var device = default(DiskStatics);
             foreach (var item in devices)
             {
-                if (item.DeviceName == name)
+                if (item.Name == name)
                 {
                     device = item;
                     break;
