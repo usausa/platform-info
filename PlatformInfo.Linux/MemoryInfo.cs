@@ -25,12 +25,6 @@ public sealed class MemoryInfo : IPlatformInfo
 
     public bool Update()
     {
-        var now = DateTime.Now;
-        if (UpdateAt == now)
-        {
-            return true;
-        }
-
         using var reader = new StreamReader("/proc/meminfo");
         while (reader.ReadLine() is { } line)
         {
@@ -53,7 +47,7 @@ public sealed class MemoryInfo : IPlatformInfo
             }
         }
 
-        UpdateAt = now;
+        UpdateAt = DateTime.Now;
 
         return true;
     }

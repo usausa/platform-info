@@ -21,12 +21,6 @@ public sealed class ProcessSummaryInfo : IPlatformInfo
 
     public bool Update()
     {
-        var now = DateTime.Now;
-        if (UpdateAt == now)
-        {
-            return true;
-        }
-
         var process = 0;
         var thread = 0;
         foreach (var dir in Directory.EnumerateDirectories("/proc"))
@@ -59,7 +53,7 @@ public sealed class ProcessSummaryInfo : IPlatformInfo
         ProcessCount = process;
         ThreadCount = thread;
 
-        UpdateAt = now;
+        UpdateAt = DateTime.Now;
 
         return true;
     }

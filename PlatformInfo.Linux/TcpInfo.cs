@@ -36,20 +36,14 @@ public sealed class TcpInfo : IPlatformInfo
     public int Total { get; private set; }
     // ReSharper restore IdentifierTypo
 
-    internal TcpInfo(string version)
+    internal TcpInfo(int? version = null)
     {
-        path = "/proc/net/tcp" + version;
+        path = $"/proc/net/tcp{version}";
         Update();
     }
 
     public bool Update()
     {
-        var now = DateTime.Now;
-        if (UpdateAt == now)
-        {
-            return true;
-        }
-
         var range = (Span<Range>)stackalloc Range[5];
         using var reader = new StreamReader(path);
         reader.ReadLine();
@@ -103,7 +97,7 @@ public sealed class TcpInfo : IPlatformInfo
             Total++;
         }
 
-        UpdateAt = now;
+        UpdateAt = DateTime.Now;
 
         return true;
     }

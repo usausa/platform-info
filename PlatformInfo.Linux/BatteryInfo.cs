@@ -43,12 +43,6 @@ public sealed class BatteryInfo : IPlatformInfo
             return false;
         }
 
-        var now = DateTime.Now;
-        if (UpdateAt == now)
-        {
-            return true;
-        }
-
         Capacity = ReadFileAsInt32("capacity");
         Status = ReadFile("status");
         Voltage = ReadFileAsMilliDouble("voltage_now");
@@ -56,7 +50,7 @@ public sealed class BatteryInfo : IPlatformInfo
         Charge = ReadFileAsMilliDouble("charge_now");
         ChargeFull = ReadFileAsMilliDouble("charge_full");
 
-        UpdateAt = now;
+        UpdateAt = DateTime.Now;
 
         return true;
     }

@@ -53,7 +53,13 @@ internal static class ExampleLinux
         var uptime = LinuxPlatform.GetUptime();
         Console.WriteLine(uptime.Uptime);
 
-        var network = LinuxPlatform.GetNetworkDevice();
+        var disk = LinuxPlatform.GetDiskStatics();
+        foreach (var device in disk.Devices)
+        {
+            Console.WriteLine($"{device.DeviceName} : {device.ReadCompleted} {device.WriteCompleted}");
+        }
+
+        var network = LinuxPlatform.GetNetworkStatic();
         foreach (var @if in network.Interfaces)
         {
             Console.WriteLine($"{@if.Interface} : {@if.RxBytes}");

@@ -23,12 +23,6 @@ public sealed class LoadAverageInfo : IPlatformInfo
     // ReSharper disable StringLiteralTypo
     public bool Update()
     {
-        var now = DateTime.Now;
-        if (UpdateAt == now)
-        {
-            return true;
-        }
-
         var span = File.ReadAllText("/proc/loadavg").AsSpan();
         var range = (Span<Range>)stackalloc Range[5];
         span.Split(range, ' ', StringSplitOptions.RemoveEmptyEntries);
@@ -36,7 +30,7 @@ public sealed class LoadAverageInfo : IPlatformInfo
         Average5 = Double.TryParse(span[range[1]], CultureInfo.InvariantCulture, out var v5) ? v5 : 0;
         Average15 = Double.TryParse(span[range[2]], CultureInfo.InvariantCulture, out var v15) ? v15 : 0;
 
-        UpdateAt = now;
+        UpdateAt = DateTime.Now;
 
         return true;
     }

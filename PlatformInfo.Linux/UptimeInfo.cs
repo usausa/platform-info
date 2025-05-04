@@ -18,19 +18,13 @@ public sealed class UptimeInfo : IPlatformInfo
 
     public bool Update()
     {
-        var now = DateTime.Now;
-        if (UpdateAt == now)
-        {
-            return true;
-        }
-
         var span = File.ReadAllText("/proc/uptime").AsSpan();
         var range = (Span<Range>)stackalloc Range[2];
         span.Split(range, ' ', StringSplitOptions.RemoveEmptyEntries);
         var second = Double.Parse(span[range[0]], CultureInfo.InvariantCulture);
         Uptime = TimeSpan.FromSeconds(second);
 
-        UpdateAt = now;
+        UpdateAt = DateTime.Now;
 
         return true;
     }

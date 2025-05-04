@@ -22,12 +22,6 @@ public sealed class FileDescriptorInfo : IPlatformInfo
 
     public bool Update()
     {
-        var now = DateTime.Now;
-        if (UpdateAt == now)
-        {
-            return true;
-        }
-
         var span = File.ReadAllText("/proc/sys/fs/file-nr").AsSpan();
         var range = (Span<Range>)stackalloc Range[3];
         span.Split(range, '\t', StringSplitOptions.RemoveEmptyEntries);
@@ -35,7 +29,7 @@ public sealed class FileDescriptorInfo : IPlatformInfo
         Used = Int64.Parse(span[range[1]], CultureInfo.InvariantCulture);
         Max = Int64.Parse(span[range[2]], CultureInfo.InvariantCulture);
 
-        UpdateAt = now;
+        UpdateAt = DateTime.Now;
 
         return true;
     }

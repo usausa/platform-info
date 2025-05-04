@@ -46,7 +46,7 @@ public sealed class NetworkStatics
     }
 }
 
-public class NetworkDeviceInfo : IPlatformInfo
+public class NetworkStaticInfo : IPlatformInfo
 {
     private readonly List<NetworkStatics> interfaces = new();
 
@@ -54,19 +54,13 @@ public class NetworkDeviceInfo : IPlatformInfo
 
     public IReadOnlyList<NetworkStatics> Interfaces => interfaces;
 
-    internal NetworkDeviceInfo()
+    internal NetworkStaticInfo()
     {
         Update();
     }
 
     public bool Update()
     {
-        var now = DateTime.Now;
-        if (UpdateAt == now)
-        {
-            return true;
-        }
-
         foreach (var network in interfaces)
         {
             network.Live = false;
@@ -129,7 +123,7 @@ public class NetworkDeviceInfo : IPlatformInfo
             }
         }
 
-        UpdateAt = now;
+        UpdateAt = DateTime.Now;
 
         return true;
     }

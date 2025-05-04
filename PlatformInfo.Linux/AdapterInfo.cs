@@ -29,15 +29,9 @@ public sealed class AdapterInfo : IPlatformInfo
             return false;
         }
 
-        var now = DateTime.Now;
-        if (UpdateAt == now)
-        {
-            return true;
-        }
-
         Online = ReadFile("online").AsSpan().StartsWith("1");
 
-        UpdateAt = now;
+        UpdateAt = DateTime.Now;
 
         return true;
     }

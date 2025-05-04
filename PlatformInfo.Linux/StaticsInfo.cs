@@ -67,12 +67,6 @@ public sealed class StaticsInfo : IPlatformInfo
     // ReSharper disable StringLiteralTypo
     public bool Update()
     {
-        var now = DateTime.Now;
-        if (UpdateAt == now)
-        {
-            return true;
-        }
-
         using var reader = new StreamReader("/proc/stat");
         while (reader.ReadLine() is { } line)
         {
@@ -104,7 +98,7 @@ public sealed class StaticsInfo : IPlatformInfo
             }
         }
 
-        UpdateAt = now;
+        UpdateAt = DateTime.Now;
 
         return true;
     }

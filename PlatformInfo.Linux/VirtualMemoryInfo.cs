@@ -37,12 +37,6 @@ public class VirtualMemoryInfo : IPlatformInfo
     // ReSharper disable StringLiteralTypo
     public bool Update()
     {
-        var now = DateTime.Now;
-        if (UpdateAt == now)
-        {
-            return true;
-        }
-
         using var reader = new StreamReader("/proc/vmstat");
         while (reader.ReadLine() is { } line)
         {
@@ -77,7 +71,7 @@ public class VirtualMemoryInfo : IPlatformInfo
             }
         }
 
-        UpdateAt = now;
+        UpdateAt = DateTime.Now;
 
         return true;
     }
