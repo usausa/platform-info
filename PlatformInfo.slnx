@@ -1,7 +1,7 @@
 <Solution>
   <Folder Name="/Example/">
-    <Project Path="Example.Darwin/Example.Darwin.csproj" Id="149e7a48-d81b-4a84-93b5-f45d3d632561" />
-    <Project Path="Example.Linux/Example.Linux.csproj" Id="89c6b6d4-9d5e-4d9c-ad3d-ecc0d07e549a" />
+    <Project Path="Example.Darwin/Example.Darwin.csproj" />
+    <Project Path="Example.Linux/Example.Linux.csproj" />
   </Folder>
   <Folder Name="/Library/">
     <Project Path="PlatformInfo.Darwin/PlatformInfo.Darwin.csproj" />
