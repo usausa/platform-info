@@ -23,12 +23,17 @@ public sealed class FileDescriptorInfo
         var span = File.ReadAllText("/proc/sys/fs/file-nr").AsSpan();
         var range = (Span<Range>)stackalloc Range[4];
         span.Split(range, '\t', StringSplitOptions.RemoveEmptyEntries);
-        Allocated = Int64.Parse(span[range[0]], CultureInfo.InvariantCulture);
-        Used = Int64.Parse(span[range[1]], CultureInfo.InvariantCulture);
-        Max = Int64.Parse(span[range[2]], CultureInfo.InvariantCulture);
+        Allocated = ParseInt64(span[range[0]]);
+        Used = ParseInt64(span[range[1]]);
+        Max = ParseInt64(span[range[2]]);
 
         UpdateAt = DateTime.Now;
 
         return true;
+    }
+
+    private static long ParseInt64(ReadOnlySpan<char> source)
+    {
+        return Int64.TryParse(source, CultureInfo.InvariantCulture, out var result) ? result : 0;
     }
 }

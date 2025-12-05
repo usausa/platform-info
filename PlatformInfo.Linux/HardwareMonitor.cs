@@ -33,7 +33,7 @@ public sealed class HardwareSensor
     }
 }
 
-public sealed class HardwareMonitor
+public sealed partial class HardwareMonitor
 {
     public string Name { get; set; }
 
@@ -89,7 +89,10 @@ public sealed class HardwareMonitor
 
     private static string ExtractSensorType(string filename)
     {
-        var match = Regex.Match(filename, @"^\d+");
+        var match = SensorTypePattern().Match(filename);
         return match.Success ? match.Value.TrimEnd('_') : filename;
     }
+
+    [GeneratedRegex(@"^\d+")]
+    private static partial Regex SensorTypePattern();
 }

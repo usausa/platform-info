@@ -42,6 +42,19 @@ public sealed class TcpInfo
 
     public bool Update()
     {
+        Established = 0;
+        SynSent = 0;
+        SynRecv = 0;
+        FinWait1 = 0;
+        FinWait2 = 0;
+        TimeWait = 0;
+        Close = 0;
+        CloseWait = 0;
+        LastAck = 0;
+        Listen = 0;
+        Closing = 0;
+        Total = 0;
+
         var range = (Span<Range>)stackalloc Range[5];
         using var reader = new StreamReader(path);
         reader.ReadLine();

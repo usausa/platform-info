@@ -127,7 +127,7 @@ public sealed class StaticsInfo
     {
         foreach (var core in cpuCores)
         {
-            if (core.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
+            if (core.Name.AsSpan().Equals(name, StringComparison.OrdinalIgnoreCase))
             {
                 return core;
             }
